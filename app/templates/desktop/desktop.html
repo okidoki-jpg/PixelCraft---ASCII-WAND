@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% include "desktop/intro.html" %}
+{% include "desktop/create.html" %}
+{% include "desktop/collection.html" %}
+{% include "desktop/viewer.html" %}
+{% include "desktop/loading.html" %}
+{% include "desktop/footer.html" %}
+{% block loading_window %} {% endblock %}
+
+{% block desktop_icons %}
+
+<div class="desktop-icons">
+	<div id="create-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/create.png') }}" alt=""></div>
+		<p>CREATE</p>
+	</div>
+	<div id="collection-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/collection-empty.png') }}" alt=""></div>
+		<p>COLLECTION</p>
+	</div>
+	<div id="viewer-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/photos.png') }}" alt=""></div>
+		<p>VIEWER</p>
+	</div>
+	<div id="github-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/github.png') }}" alt=""></div>
+		<p>GITHUB</p>
+	</div>
+	<div id="linkedin-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/linkedin.png') }}" alt=""></div>
+		<p>LINKEDIN</p>
+	</div>
+	<div id="x-icon" class="icon">
+		<div><img src="{{ url_for('static', filename='images/xlogo.png') }}" alt="">
+		</div>
+		<p>X</p>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block intro_window %} {% endblock %}
+
+{% block workspace_window %} {% endblock %}
+
+{% block collection_window %} {% endblock %}
+
+{% block viewer_window %} {% endblock %}
+
+{% block footer %} {% endblock %}

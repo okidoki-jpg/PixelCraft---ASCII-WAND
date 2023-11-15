@@ -1,0 +1,35 @@
+{% block collection_window %}
+
+<div id="collection-window" class="window">
+	<div class="nav-bar">
+		<h5>COLLECTION</h5>
+		<div class="nav-btns">
+			<button class="close"><i class="fa-solid fa-xmark"></i></button>
+			<button><i class="fa-solid fa-window-maximize"></i></button>
+			<button><i class="fa-regular fa-window-minimize"></i></button>
+		</div>
+	</div>
+	<div class="tab-ops">
+		<ul>
+			<!--<li>File</li>
+			<li>Edit</li>
+			<li>View</li>
+			<li>Help</li>-->
+		</ul>
+		<div id="delete-ops">
+			<div id="delete"><i class="fa-regular fa-trash-can"></i></div>
+			<div id="cancel-delete" style="diplay: none"><i class="fa-regular fa-circle-xmark"></i></div>
+		</div>
+	</div>
+	<div id="collection-content">
+		<!-- load collection images here -->
+		{% for image in images %}
+			<div class="collection-image" data-image-id="{{ image.id }}">
+				<img src="{{ image.img }}">
+			</div>
+		{% endfor %}
+
+	</div>
+</div>
+
+{% endblock collection_window %}

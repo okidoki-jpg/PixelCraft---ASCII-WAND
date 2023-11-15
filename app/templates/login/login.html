@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block login_content %}
+
+<input type="checkbox" id="check">
+
+<div id="login-ops">
+	<div id="credentials">
+		<div class="guest">GUEST</div>
+		<div class="login" onclick="showLoginForm()">LOGIN</div>
+	</div>
+	<span class="signup">Don't have an account?
+		<label for="check" onclick="showSignupForm()">Signup</label>
+	</span>
+</div>
+
+
+<div class="login-form form">
+	<header>Login</header>
+	<form action="/">
+		<span id="loginEmailError" style="color: red;"></span>
+		<input type="email" placeholder="Enter your email" id="login-email" onblur="validateEmail()" required>
+		<input type="password" placeholder="Enter your password" id="login-password" required>
+		<a href="#">Forgot password?</a>
+		<input type="button" class="button" value="Login" id="login-submit" onclick="submitLoginForm()">
+	</form>
+	<div class="signup">
+		<span class="signup">Don't have an account?
+			<label for="check" onclick="showSignupForm()">Signup</label>
+		</span>
+	</div>
+</div>
+<div class="signup-form form">
+	<header>Signup</header>
+	<form action="#">
+		<span id="signupEmailError" style="color: red;"></span>
+		<input type="email" placeholder="Enter your email" id="signup-email" onblur="checkEmailAvailability()" required>
+		<input type="text" placeholder="Enter your first name" id="first-name" required>
+		<input type="text" placeholder="Enter your last name" id="last-name" required>
+		<input type="password" placeholder="Create a password" id="password1" required>
+		<input type="password" placeholder="Confirm your password" id="password2" required>
+		<span id="password-error" style="color: red;"></span>
+		<input type="button" class="button" value="Signup" id="signup-submit" onclick="submitSignupForm()">
+	</form>
+	<div class="signup">
+		<span class="signup">Already have an account?
+			<label for="check" onclick="showLoginForm()">Login</label>
+		</span>
+	</div>
+</div>
+
+{% endblock %}

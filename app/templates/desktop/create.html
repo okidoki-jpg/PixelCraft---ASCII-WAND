@@ -1,0 +1,97 @@
+{% block workspace_window %}
+
+<div id="workspace-window" class="window" style="display: none;">
+	<div class="nav-bar">
+		<h5>CREATE</h5>
+		<div class="nav-btns">
+			<button class="close">x</button>
+			<button>o</button>
+			<button>_</button>
+		</div>
+	</div>
+	<div class="tab-ops">
+		<ul>
+			<li>File</li>
+			<li>Edit</li>
+			<li>View</li>
+			<li>Help</li>
+		</ul>
+		<div id="save-ops">
+			<div id="save"><i class="fa-solid fa-cloud-arrow-down"></i>save</div>
+
+		</div>
+	</div>
+	<div id="window-content" style="dispay: none;">
+		<div class="window-display">
+			<div class="side-panel">
+				<div id="controls">
+					<button data-target="res"><i class="fa-solid fa-sliders"></i></button>
+					<button data-target="greys" id="bw-toggle"><i class="fa-solid fa-circle-half-stroke"></i></button>
+					<button data-target="highs"><i class="fa-regular fa-sun"></i></button>
+					<button data-target="zzoom"><i class="fa-solid fa-magnifying-glass"></i></button>
+					<button id="random"><i class="fa-solid fa-dice"></i></button>
+					<button id="download"><a href="#" download><i class="fa-solid fa-download"></i></a></button>
+				</div>
+				<div class="panel-preview">
+					<img class="prev-img" src="" alt="">
+				</div>
+			</div>
+			<div class="content-view">
+				<div class="contain">
+					<div >
+						<canvas id="highlightsCanvas"></canvas>
+						<canvas id="canvas"></canvas>
+					</div>
+					<div class="display-ops">
+						<input type="file" id="imageInput">
+						<div class="filters">
+							<div id="res">
+								<label for="resolution" id="resolutionLabel">Resolution</label>
+								<input type="range" id="resolution" name="resolution" min="1" max="20" value="5">
+							</div>
+							<div id="greys">
+								<label for="greyscale" id="greyscaleLabel">Greyscale</label>
+								<input type="range" id="greyscale" name="greyscale" min="1" max="100" value="1">
+							</div>
+							<div id="highs" style="dislay:none;">
+								<label for="highlights" id="highlightsLabel">Highlights</label>
+								<input type="range" id="highlights" name="highlights" min="0" max="2" value="1">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="control-panel">
+			<div class="primary-color">
+				<div class="psw prim" style="background: black;"></div>
+				<div class="psw sec" style="background: white;"></div>
+			</div>
+			<div class="swatches">
+				<div class="sw" style="background: yellow;"></div>
+				<div class="sw" style="background: orange;"></div>
+				<div class="sw" style="background: lightsalmon;"></div>
+				<div class="sw" style="background: pink;"></div>
+				<div class="sw" style="background: red;"></div>
+				<div class="sw" style="background: green;"></div>
+				<div class="sw" style="background: darkgreen;"></div>
+				<div class="sw" style="background: lightblue;"></div>
+				<div class="sw" style="background: purple;"></div>
+				<div class="sw" style="background: blue;"></div>
+				<div class="sw" style="background: brown;"></div>
+				<div class="sw" style="background: black;"></div>
+				<div class="sw" style="background: yellow;"></div>
+				<div class="sw" style="background: orange;"></div>
+				<div class="sw" style="background: lightsalmon;"></div>
+				<div class="sw" style="background: pink;"></div>
+				<div class="sw" style="background: red;"></div>
+				<div class="sw" style="background: green;"></div>
+				<div class="sw" style="background: darkgreen;"></div>
+				<div class="sw" style="background: lightblue;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock workspace_window %}

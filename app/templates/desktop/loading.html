@@ -1,0 +1,25 @@
+{% block loading_window %}
+
+
+<div id="load-window" style="display: none;">
+	<div id="loading-screen">
+		<div id="cmd-titles">
+			<div class="logo">
+				<div class="logo-img">
+					<img src="{{ url_for('static', filename='images/logo.png') }}" alt="PixelCraft Logo">
+				</div>
+				<div class="logo-text">
+					<h1>PixelCraft:</h1>
+					<h2>ASCII WIZARD</h1>
+				</div>
+			</div>
+			<div id="phrase">
+				<h4>Transform Your Images into Stunning ASCII Art.</h4>
+			</div>
+		</div>
+		<div class="loader"><h3>LOADING</h3></div>
+		<div id="escape"><p>Press ESC to Skip Intro</p></div>
+	</div>
+</div>
+
+{% endblock %}

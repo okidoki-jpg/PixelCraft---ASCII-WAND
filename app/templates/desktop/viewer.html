@@ -1,0 +1,42 @@
+{% block viewer_window %}
+
+<div id="viewer-window" class="window">
+	<div class="nav-bar">
+		<h5>IMAGE VIEWER</h5>
+		<div class="nav-btns">
+			<button class="close">x</button>
+			<button>o</button>
+			<button>_</button>
+		</div>
+	</div>
+	<div class="tab-ops">
+		<ul>
+			<li class="edit">Edit</li>
+			<!--<li>File</li>
+			<li>View</li>
+			<li>Help</li>-->
+		</ul>
+	</div>
+	<!-- image carousel with next and back buttons -->
+
+	<div class="viewer-content">
+		{% for image in images %}
+		<div class="view-image">
+			<div class="preview-image">
+				<img src="{{ image.img }}" data-img-id="{{ image.id }}">
+			</div>
+			<div class="main-image">
+				<img src="{{ image.ascci }}" data-img-id="{{ image.id }}">
+			</div>
+		</div>
+		{% endfor %}
+		<div class="sliders left" onclick="side_slide(-1)">
+			<span class="fas fa-angle-left"></span>
+		</div>
+		<div class="sliders right" onclick="side_slide(1)">
+			<span class="fas fa-angle-right"></span>
+		</div>
+	</div>
+</div>
+
+{% endblock viewer_window %}
