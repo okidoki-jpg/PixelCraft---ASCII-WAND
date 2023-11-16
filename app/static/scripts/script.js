@@ -4,7 +4,11 @@ const desktop = $(".desktop-icons");
 
 //show desktop
 function showDesktop() {
-	window.location.hash = "";
+	if (window.location.hash !== '') {
+            // Remove the hash from the URL without reloading the page
+	    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+		window.location.reload();
+	}
 	loginPrompt.hide();
 	desktop.css("display", "flex");
 	// intro.show();

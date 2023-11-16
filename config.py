@@ -5,7 +5,7 @@ import pymysql
 class Config:
 	SECRET_KEY = 'super-secret-key'
 	user = 'okidoki'
-	password = 'okidoki'
+	password = 'Jak3Th3D0g'
 	host = 'localhost'
 	database = 'pixel_craft'
 	SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{user}:{password}@{host}/{database}"
