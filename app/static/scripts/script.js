@@ -3,18 +3,54 @@ const signupPage = $("#signup-page");
 const desktop = $(".desktop-icons");
 
 //show desktop
-function showDesktop() {
+/*function showDesktop() {
 	if (window.location.hash !== '') {
             // Remove the hash from the URL without reloading the page
 	    history.replaceState(null, document.title, window.location.pathname + window.location.search);
 		window.location.reload();
 	}
 	loginPrompt.hide();
+
 	desktop.css("display", "flex");
 	// intro.show();
     // if not don't show again, display intro
     showIntro();
+}*/
+
+function showDesktop() {
+    let loadingScreen = $('#load-window');
+    loadingScreen.show();
+	if (window.location.hash !== '') {
+            // Remove the hash from the URL without reloading the page
+	    history.replaceState(null, document.title, window.location.pathname + window.location.search);
+		window.location.reload();
+	}
+
+    function hideLoadingScreen() {
+        loadingScreen.hide();
+        loginPrompt.hide();
+		$(".window").css("visibility", "visible");
+		$(".window").css("opacity", "1");
+		$(".desktop-icons").css("visibility", "visible");
+		$(".desktop-icons").css("opacity", "1");
+		$("#footer").css("visibility", "visible");
+		$("#footer").css("opacity", "1");
+        desktop.css("display", "flex");
+        showIntro();
+    }
+
+    let minLoadingTime = 5000;
+
+    $(window).ready(function() {
+        setTimeout(hideLoadingScreen, minLoadingTime);
+    });
 }
+
+// Call the function when the document is ready
+//$(document).ready(function() {
+//    showDesktop();
+//});
+
 
 // control credential buttons
 const loginOps = $("#login-ops");
@@ -72,7 +108,24 @@ function showInitial() {
 
 // Function to show the intro
 guest.on("click", () => {
-	showDesktop();
+	let data = {"email": "guest", "password": "guest"};
+
+	$.ajax({
+		url: "/login",
+		method: "POST",
+		data: JSON.stringify(data),
+		contentType: "application/json",
+		success: (response) => {
+			if (response.success) {
+				showDesktop();
+			} else {
+				alert("Login failed");
+			}
+		},
+		error: (err) => {
+			console.error("Error logging in: " + err.responseText);
+		}
+	});
 });
 
 login.on("click", () => {
@@ -91,6 +144,26 @@ signup.on("click", () => {
 $(window).on("hashchange", () => {
     handleStateChange();
 });
+
+
+// check if user is logged in
+function isLoggedIn() {
+	$.ajax({
+		url: "/check-login",
+		method: "GET",
+		success: (response) => {
+			if (response.user === "guest") {
+				return false;
+			} else {
+				return true;
+			}
+		},
+		error: (err) => {
+			console.error("Error checking login: " + err.responseText);
+		}
+	});
+}
+
 
 // Handle the initial state
 $(document).ready(() => {
@@ -275,9 +348,8 @@ function submitLoginForm() {
 // Show Intro Window
 
 function showIntro() {
-	const intro = $("#intro-window");
-	
-	intro.show();
+	focus($("#intro-window"));
+	setZIndex();
 }
 
 
@@ -389,14 +461,35 @@ $("#create-icon").on("click", function() {
 
 // listen for click on collection icon
 $("#collection-icon").on("click", function() {
+	if (!isLoggedIn()) {
+		alert("Please log in to access your collection");
+		return;
+	}
 	focus($("#collection-window"))
 	setZIndex();
 });
 
 // listen for click on viewer icon
 $("#viewer-icon").on("click", function() {
+	if (!isLoggedIn()) {
+		alert("Please log in to access your viewer");
+		return;
+	}
 	focus($("#viewer-window"))
 	setZIndex();
+});
+
+// social/connection icons redirect
+$("#github-icon").on("click", function() {
+	window.open('https://github.com/okidoki-jpg', '_blank');
+});
+
+$("#linkedin-icon").on("click", function() {
+	window.open('https://www.linkedin.com/in/okuhle-nsibande', '_blank');
+});
+
+$("#x-icon").on("click", function() {
+	window.open('https://twitter.com/sonofpeter_exe?t=62zqBo1BXunc8bMZ9S4iRw&s=09', '_blank');
 });
 
 
@@ -886,10 +979,16 @@ function conv() {
 // Save button event listener
 saveBtn.on("click", () => {
 	// check if image was uploaded
-	/*if (arePathsEqual(previewImg.src, desktopImg)) {
-		console.log("upload an image first");
-		break;
-	}*/
+	if (!formData.has('image')) {
+		alert("Please upload an image first");
+		return;
+	}
+
+	// deny if not logged in
+	if (!isLoggedIn()) {
+		alert("Please log in to save your creation");
+		return;
+	}
 
 	// fulfil blob conversion promise
 	conv()
@@ -1111,7 +1210,7 @@ $(".edit").click(reEdit);
 // mark active feature preview
 $(document).ready(function() {
 	// if anything but the card is clicked, remove 'active' class
-	$(document).click(function(e) {
+	$(document).on("click", function(e) {
 		if (!$(e.target).is(".toggle-btn")) {
 			$(".card").removeClass("active");
 			$(".card").css("border-bottom", "none");
@@ -1165,10 +1264,38 @@ $(document).ready(function() {
 
 
 
+// toggle foot nav
+$("#foot-nav-toggle").click(function() {
+	$('#foot-nav-items').toggle();
+});
 
 
+// logout
+function logout() {
+	$.ajax({
+		url: "/logout",
+		method: "GET",
+		success: (response) => {
+			if (response.success) {
+				showInitial();
+				window.location.reload();
+			} else {
+				console.log("Logout failed");
+			}
+		},
+		error: function(err) {
+			console.error("Error logging out: " + err.responseText);
+		}
+	});
+}
+
+// logout from user
+$("#logout").on("click", logout);
+
+// signup from guest
+$("#guest-signup").on("click", logout);
 
 
-
-
+// show intro
+$("#intro-icon").on("click", showIntro);
 

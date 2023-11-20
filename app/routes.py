@@ -15,7 +15,7 @@ def index():
 	if 'user' not in session:
 		return render_template('login/login.html')
 	images = AsciiImg.query.all()
-	return render_template('desktop/desktop.html', images=images)
+	return render_template('desktop/desktop.html', user=session['user'], images=images)
 
 @app.route('/check-login', methods=['GET'])
 def checkLogin():
@@ -74,6 +74,9 @@ def login(*args):
 		data = request.get_json()
 		email = data.get('email')
 		password = data.get('password')
+		if email == "guest":
+			session['user'] = "guest"
+			return jsonify({'success': True})
 
 	user = User.query.filter_by(email=email).first()
 	if user:
@@ -147,3 +150,9 @@ def delete():
 	except Exception as e:
 		print("Error deleting img:", e)
 		return jsonify({"success" : False})
+
+@app.route("/logout", methods=["GET"])
+def logout():
+	session.pop('user', None)
+	index()
+	return jsonify({"success": True})

@@ -1,8 +1,31 @@
 {% block footer %}
 
 	<footer id="footer">
-		<div class="foot-nav">
-			<img src="{{ url_for('static', filename='images/window.png') }}" alt="logo" class="logo">
+		<div id="foot-nav" class"foot-nav">
+			<div id="foot-nav-items">
+				<ul>
+					<li>
+						<div class="foot-nav-item">
+							<div><i class="fa fa-terminal"></i></div>
+							<div id="intro-icon"><h3>Show Intro</h3></div>
+						</div>
+					</li>
+
+					<li>
+						<div class="foot-nav-item">
+							<div><i class="fa fa-power-off"></i></div>
+							{% if user != 'guest' %}
+							<div id="logout"><h3>Logout</h3></div>
+							{% else %}
+							<div id="guest-signup"><h3>Sign Up</h3></div>
+							{% endif %}
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div id="foot-nav-toggle">
+				<i class="fa fa-power-off fa-lg"></i>
+			</div>
 		</div>
 	</footer>
 
