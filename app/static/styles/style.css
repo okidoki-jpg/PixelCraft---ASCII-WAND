@@ -689,7 +689,6 @@ a:visited, #download a:visited, a:link {
  */
 
 .desktop-icons {
-    display: none;
 	width: 20%;
 	flex-direction: column;
 	justify-content: center;
@@ -1152,23 +1151,23 @@ a:visited, #download a:visited, a:link {
 
 /* don't show desktop on mobile */
 @media only screen and (min-width: 600px) {
-	#desktop {
+	#esktop {
 		display: none !important;
 	}
 
-	.desktop-icons {
+	.esktop-icons {
 		display: none !important;
 	} 
 
-	#intro-window {
+	#ntro-window {
 		display: none !important;
 	}
 
-	#alert {
+	#lert {
 		display: block;
 	}
 
-	.alert-text h1 {
+	.lert-text h1 {
 		text-align: center;
 		position: absolute;
 		top: 50%;

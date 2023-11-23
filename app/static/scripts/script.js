@@ -39,9 +39,9 @@ function showDesktop() {
         showIntro();
     }
 
-    let minLoadingTime = 5000;
+	let minLoadingTime = 5000;
 
-    $(window).ready(function() {
+	$(window).ready(function() {
         setTimeout(hideLoadingScreen, minLoadingTime);
     });
 }
