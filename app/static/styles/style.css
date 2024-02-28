@@ -180,7 +180,10 @@ body {
 }
 
 .nav-bar {
+	display: flex !important;
+	align-items: center;
     height: 1.5em;
+	paddig-top: 1px !important;
     width: 100%;
     background: blue;
     display: flex;
@@ -192,8 +195,9 @@ body {
 
 .nav-btns {
     top: 50%;
+	tansform: translateY(-50%);
     height: 100%;
-    padding-top: 1px;
+    paddng-top: 1px;
 }
 
 .nav-btns button {
@@ -255,6 +259,14 @@ a:visited, #download a:visited, a:link {
 	flex-direction: column;
 	borde: 1px solid white;
 	color: white;
+}
+
+.content {
+	display: none;
+}
+
+body.loaded .content {
+	display: block;
 }
 
 #load-window h3, .logo {
@@ -359,8 +371,6 @@ a:visited, #download a:visited, a:link {
  */
 
 #intro-window {
-	opacity: 0;
-	visibility: hidden;
 	background: rgba(255, 255, 255, 0.8);
 	height: auto;
 	max-height: 60vh;
@@ -1092,7 +1102,6 @@ a:visited, #download a:visited, a:link {
     width: 100%;
     bottom: 0%;
     background: lightgrey;
-	visibility: hidden;
 }
 
 #foot-nav {
@@ -1139,6 +1148,31 @@ a:visited, #download a:visited, a:link {
 	margin: 0 5px;
 }
 
+/* Alert Window */
+
+#alert-banner {
+	position: absolute;
+	display: none;
+	height: 3em;
+	width: 80%;
+	margin: 10px auto;
+	right: 50%;
+	transform: translateX(50%);
+	border-radius: 10px;
+	border: 1px solid black;
+	background: rgba(255, 255, 255, 0.8);
+	text-align: center;
+}
+
+#alert-banner h3 {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+	color: black
+}
+
+
+
 #alert {
 	display: none;
 	position: absolute;
@@ -1146,6 +1180,87 @@ a:visited, #download a:visited, a:link {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	height: 10em;
+}
+
+.alert-content {
+	display: flex;
+	align-items: center;
+	position: relative;
+	top: 50%;
+	transform: translateY(-70%);
+}
+
+.alert-icon {
+	width: 20%;
+	text-align: center;
+	margin: 0 10px;
+}
+
+#alert-text {
+	margin: 0 10px;
+	width: 70%;
+	color: black;
+}
+
+#alert-text h1 {
+	color: black;
+}
+
+
+.warn,
+.warn::before,
+.warn::after
+{
+  position: relative;
+  padding: 0;
+  margin: 0;
+}
+
+.warn {
+  font-size: 36px;
+  color: transparent;
+}
+
+.warn.warning {
+  display: inline-block;
+
+  top: 0.225em;
+
+  width: 1.15em;
+  height: 1.15em;
+
+  overflow: hidden;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.625em;
+}
+
+.warn.warning::before {
+  content: "";
+  display: block;
+  top: -0.08em;
+  left: 0.0em;
+  position: absolute;
+  border: transparent 0.6em solid;
+  border-bottom-color: #fd3;
+  border-bottom-width: 1em;
+  border-top-width: 0;
+  box-shadow: #999 0 1px 1px;
+}
+
+.warn.warning::after {
+  display: block;
+  position: absolute;
+  top: 0.3em;
+  left: 0;
+  width: 100%;
+  padding: 0 1px;
+  text-align: center;
+  font-family: "Garamond";
+  content: "!";
+  font-size: 0.65em;
+  font-weight: bold;
+  color: #333;
 }
 
 

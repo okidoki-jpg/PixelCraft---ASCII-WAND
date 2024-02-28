@@ -1,6 +1,6 @@
 {% block workspace_window %}
 
-<div id="workspace-window" class="window">
+<div id="workspace-window" class="window content" style="display: none;">
 	<div class="nav-bar">
 		<h5>CREATE</h5>
 		<div class="nav-btns">
@@ -11,10 +11,10 @@
 	</div>
 	<div class="tab-ops">
 		<ul>
-			<li>File</li>
+			<!--<li>File</li>
 			<li>Edit</li>
 			<li>View</li>
-			<li>Help</li>
+			<li>Help</li>-->
 		</ul>
 		<div id="save-ops">
 			<div id="save"><i class="fa-solid fa-cloud-arrow-down"></i>save</div>
@@ -28,7 +28,7 @@
 					<button data-target="res"><i class="fa-solid fa-sliders"></i></button>
 					<button data-target="greys" id="bw-toggle"><i class="fa-solid fa-circle-half-stroke"></i></button>
 					<button data-target="highs"><i class="fa-regular fa-sun"></i></button>
-					<button data-target="zzoom"><i class="fa-solid fa-magnifying-glass"></i></button>
+					<button id="zooom" data-target="zzoom"><i class="fa-solid fa-magnifying-glass"></i></button>
 					<button id="random"><i class="fa-solid fa-dice"></i></button>
 					<button id="download"><a href="#" download><i class="fa-solid fa-download"></i></a></button>
 				</div>

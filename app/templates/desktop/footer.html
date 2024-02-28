@@ -1,6 +1,6 @@
 {% block footer %}
 
-	<footer id="footer">
+	<footer id="footer" class="content" style="display: none;">
 		<div id="foot-nav" class"foot-nav">
 			<div id="foot-nav-items">
 				<ul>
@@ -16,6 +16,7 @@
 							<div><i class="fa fa-power-off"></i></div>
 							{% if user != 'guest' %}
 							<div id="logout"><h3>Logout</h3></div>
+							<!--<div id="delete-acc"><h3>Delete Account</h3></div>-->
 							{% else %}
 							<div id="guest-signup"><h3>Sign Up</h3></div>
 							{% endif %}

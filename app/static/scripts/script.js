@@ -29,10 +29,10 @@ function showDesktop() {
     function hideLoadingScreen() {
         loadingScreen.hide();
         loginPrompt.hide();
-		$(".window").css("visibility", "visible");
-		$(".window").css("opacity", "1");
-		$(".desktop-icons").css("visibility", "visible");
-		$(".desktop-icons").css("opacity", "1");
+		$(".content").css("display", "block");
+		$(".window").css("display", "none");
+		$("#intro-window").css("display", "block");
+
 		$("#footer").css("visibility", "visible");
 		$("#footer").css("opacity", "1");
         desktop.css("display", "flex");
@@ -60,7 +60,8 @@ const guest = $(".guest");
 const accessCheck = $("#check");
 const loginForm = $(".login-form");
 const signupForm = $(".signup-form");
-let currentState = "initial";
+let currentState = "";
+let isGuest = true;
 
 function setStateAndHash(state) {
     currentState = state;
@@ -99,16 +100,43 @@ function showSignupForm() {
 
 // Function to show the initial state
 function showInitial() {
-	setStateAndHash("initial");
+	setStateAndHash("");
 	loginForm.hide();
     signupForm.hide();
     loginOps.show();
 	accessCheck.checked = false;
 }
 
+function flash(e) {
+	// remove any existing text
+	$("#alert-text").empty();
+
+	// create h1 element with text from argument
+	let field = $("<h1>").text(e);
+	$("#alert-text").append(field);
+	$("#alert").css("display", "block");
+	$("#alert .window").css("visibility", "visible");
+	$("#alert .window").css("opacity", "1");
+	focus($("#alert"));
+	setZIndex();
+}
+
+function dropDown(msg) {
+	let field = $("<h3>").text(msg);
+	$("#alert-banner").empty().append(field);
+	$("#alert-banner").slideDown(500).delay(2000).slideUp(500);
+}
+
+
+$('#gguest').on("click", () => {
+	console.log("Logging in as guest");
+});
+
 // Function to show the intro
-guest.on("click", () => {
-	let data = {"email": "guest", "password": "guest"};
+$('.guest').on("click", () => {
+	let data = {"user": "guest"};
+	$(".content").css("display", "none");
+	desktop.css("display", "none");
 
 	$.ajax({
 		url: "/login",
@@ -117,19 +145,23 @@ guest.on("click", () => {
 		contentType: "application/json",
 		success: (response) => {
 			if (response.success) {
+				$("#load-window").css("display", "block");
+				window.location.reload();
+
 				showDesktop();
 			} else {
+				flash("Guest login failed!");
 				alert("Login failed");
 			}
 		},
 		error: (err) => {
 			console.error("Error logging in: " + err.responseText);
+			flash(err.responseText);
 		}
 	});
 });
 
 login.on("click", () => {
-	console.log("tryna login");
 	setStateAndHash("login");
 	showLoginForm();
 });
@@ -146,27 +178,11 @@ $(window).on("hashchange", () => {
 });
 
 
-// check if user is logged in
-function isLoggedIn() {
-	$.ajax({
-		url: "/check-login",
-		method: "GET",
-		success: (response) => {
-			if (response.user === "guest") {
-				return false;
-			} else {
-				return true;
-			}
-		},
-		error: (err) => {
-			console.error("Error checking login: " + err.responseText);
-		}
-	});
-}
-
-
-// Handle the initial state
+// Check if user is logged in & handle the initial state
 $(document).ready(() => {
+	// Add 'loaded' class to body once CSS has loaded
+	$("body").addClass("loaded");
+
 	// check db for login
 	$.ajax({
 		url: "/check-login",
@@ -174,12 +190,18 @@ $(document).ready(() => {
 		success: (response) => {
 			if (response.loggedIn) {
 				showDesktop();
-			} else {
+				if (response.user == "guest") {
+					isGuest = true;
+				} else {
+					isGuest = false;
+				}
+			} else{
 				showInitial();
 			}
 		},
 		error: (err) => {
 			console.error("Error checking login: " + err.responseText);
+			flash(err.responseText);
 		}
 	});
 });
@@ -189,14 +211,15 @@ $(document).ready(() => {
 
 /* Signup */
 
+
 // Check email availability
 function checkEmailAvailability() {
     const emailInput = $("#signup-email")[0];
     const email = $("#signup-email").val();
 	//const emailError = $("#signupEmailError");
-    console.log("Checking email");
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (emailInput.checkValidity()) {
+    if (emailRegex.test(email)) {
         $.ajax({
             url: "/check-email",
             method: "POST",
@@ -207,48 +230,49 @@ function checkEmailAvailability() {
                     // Email is available
 					//emailError.setCustomValidity("");
                     console.log("Email is available");
-					// Submit form
+					// change input border color
                 } else {
                     // Email is already in use
 					//emailError.setCustomValidity("Email is already in use");
                     console.log("Email is already in use");
+					flash(response.error);
                 }
             },
             error: (err) => {
                 console.error("Error checking email: " + err.responseText);
+				flash(err.responseText);
             }
         });
     } else {
         // Invalid email format
         emailInput.setCustomValidity("Please enter a valid email address");
+		console.log("Invalid email format");
     }
 }
 
-
-// Validate password
-function validatePassword() {
-	const password1 = $("#password1").val();
-	const password2 = $("#password2").val();
-
-	if (password1 !== password2) {
-		console.log("Passwords do not match");
-		return false;
-	} else {
-		console.log("Passwords match");
-		return true;
-	}
-}
+$("#signup-email").on('blur', () => {
+	checkEmailAvailability();
+});
 
 // Submit signup form
 function submitSignupForm() {
 	const email = $("#signup-email").val();
 	const password = $("#password1").val();
+	const password2 = $("#password2").val();
 	const first = $("#first-name").val();
 	const last = $("#last-name").val();
 
-	if (!email || !password || !first || !last) {
+	if (!email || !password || !password2 || !first || !last) {
+		flash("Please fill out all fields");
 		console.log("Please fill out all fields");
 		return;
+	}
+
+	// Validate password
+	if (password !== password2) {
+		console.log("Passwords do not match");
+		flash("Passwords do not match");
+		return false;
 	}
 
 	const data = {
@@ -276,30 +300,13 @@ function submitSignupForm() {
 		},
 		error: (err) => {
 			console.error("Error signing up: " + err.responseText);
+			flash(err.responseText);
 		}
 	});
 }
 
 
 /* Login */
-
-// Validate email
-function validateEmail() {
-	const emailInput = $("#login-email")[0];
-	const email = $("#login-email").val();
-
-	if (emailInput.checkValidity()) {
-		// Email is valid
-		console.log("Email is valid");
-		return true;
-	} else {
-		// Email is invalid
-		console.log("Email is invalid");
-		return false;
-	}
-}
-
-
 // Submit login form
 
 function submitLoginForm() {
@@ -307,7 +314,7 @@ function submitLoginForm() {
 	const password = $("#login-password").val();
 
 	if (!email || !password) {
-		console.log("Please fill out all fields");
+		flash("Please fill out all the fields");
 		return;
 	}
 
@@ -325,17 +332,17 @@ function submitLoginForm() {
 			console.log("Response: " + response);
 			if (response.success) {
 				// Login successful
-				console.log("Login successful");
 				// Redirect to desktop
 				showDesktop();
-
 			} else {
 				// Login failed
-				console.log("Login failed");
+				flash(response.error);
+				console.error("Login failed");
 			}
 		},
 		error: (err) => {
 			console.error("Error logging in: " + err.responseText);
+			flash(err.responseText);
 		}
 	});
 }
@@ -461,7 +468,7 @@ $("#create-icon").on("click", function() {
 
 // listen for click on collection icon
 $("#collection-icon").on("click", function() {
-	if (!isLoggedIn()) {
+	if (isGuest) {
 		alert("Please log in to access your collection");
 		return;
 	}
@@ -471,7 +478,7 @@ $("#collection-icon").on("click", function() {
 
 // listen for click on viewer icon
 $("#viewer-icon").on("click", function() {
-	if (!isLoggedIn()) {
+	if (isGuest) {
 		alert("Please log in to access your viewer");
 		return;
 	}
@@ -650,6 +657,13 @@ function updateHighlightsLayer() {
 highs.on("input", updateHighlightsLayer);
 
 
+/* ZOOM IMAGE EFFECT */
+
+$("#zooom").on("click", () => {
+	flash("Sorry, This Feature Is Down At the Moment.");
+});
+
+
 /* RANDOM IMAGE EFFECT */
 
 // random image button
@@ -698,10 +712,12 @@ function fetchRandomImage() {
 				//img.onload();
 			} else {
 				console.log("Error: no image data received");
+				flash("No image data received. Please try again.");
 			}
 		},
 		error: (err) => {
 			console.log("Error: " + err);
+			flash(err.responseJSON.message);
 		}
 	});
 }
@@ -980,13 +996,13 @@ function conv() {
 saveBtn.on("click", () => {
 	// check if image was uploaded
 	if (!formData.has('image')) {
-		alert("Please upload an image first");
+		flash("Please upload an image first");
 		return;
 	}
 
 	// deny if not logged in
-	if (!isLoggedIn()) {
-		alert("Please log in to save your creation");
+	if (isGuest) {
+		flash("Please log in to save your creation");
 		return;
 	}
 
@@ -1010,17 +1026,22 @@ saveBtn.on("click", () => {
 				console.log("Response: " + response.success);
 				if (response.success) {
 					console.log("Image save successful");
+					// save success message. drop down from top
+					dropDown("Image saved successfully");
 				} else {
+					flash("Error saving image");
 					console.log("Image save failed");
 				}
 			},
 			error: (err) => {
 				console.error("Error saving image: " + err.responseText);
+				flash("Error saving image");
 			}
 		});
 	})
 	.catch(error => {
 		console.error("Error converting image to Blob: " + error);
+		flash("Error saving image");
 	});
 
 });
@@ -1298,4 +1319,5 @@ $("#guest-signup").on("click", logout);
 
 // show intro
 $("#intro-icon").on("click", showIntro);
+
 

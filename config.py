@@ -1,17 +1,21 @@
-from datetime import timedelta
+# configure environnet with config from .env
 import pymysql
-# configure environnet with config
+from datetime import timedelta
+from dotenv import dotenv_values
 
+config = dotenv_values(".env")
+
+
+# Config object
 class Config:
-	SECRET_KEY = 'super-secret-key'
-	user = 'okidoki'
-	password = 'Jak3Th3D0g'
-	#password = 'okidoki'
-	host = 'localhost'
-	database = 'pixel_craft'
-	SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{user}:{password}@{host}/{database}"
-	SQLALCHEMY_TRACK_MODIFICATIONS = False
+	SECRET_KEY = config['SECRET_KEY']
+	user = config['user']
+	assword = config['password']
+	host = config['host']
+	database = config['database']
+	SQLALCHEMY_DATABASE_URI = config["SQLALCHEMY_DATABASE_URI"]
+	SQLALCHEMY_TRACK_MODIFICATIONS = config["SQLALCHEMY_TRACK_MODIFICATIONS"]
 	permenant_session_lifetime = timedelta(days=5)
 
-unsplash_api_key = "zMioZc_o9Ccid1pxf5zfd47xjz8KuTDJIoOFrSppePk"
-unsplash_base_url = 'https://api.unsplash.com/photos/random'
+unsplash_api_key = config["unsplash_api_key"]
+unsplash_base_url = config["unsplash_base_url"]

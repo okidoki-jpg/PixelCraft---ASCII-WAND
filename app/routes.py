@@ -20,7 +20,8 @@ def index():
 @app.route('/check-login', methods=['GET'])
 def checkLogin():
 	if 'user' in session:
-		return jsonify({'loggedIn': True})
+		print(session['user'])
+		return jsonify({'loggedIn': True, 'user': session['user']})
 	else:
 		return jsonify({'loggedIn': False})
 
@@ -38,7 +39,7 @@ def checkEmail():
 	# check db for email
 	user = User.query.filter_by(email=email).first()
 	if user:
-		return jsonify({'available': False})
+		return jsonify({'available': False, "error" : "Email is already in use"})
 	else:
 		return jsonify({'available': True})
 
@@ -61,32 +62,38 @@ def signup():
 		return login(email, password)
 	except Exception as e:
 		print("error", e)
-		return jsonify({'success': False})
+		return jsonify({'success': False, "error" : str(e)})
 
 
 
 @app.route("/login", methods=['POST'])
 def login(*args):
+
+	email = None
 	
 	if args:
 		email, password = args
 	else:
 		data = request.get_json()
-		email = data.get('email')
-		password = data.get('password')
-		if email == "guest":
+		if data.get('user') == 'guest':
 			session['user'] = "guest"
+			index()
 			return jsonify({'success': True})
+		else:
+			email = data.get('email' )
+			password = data.get('password')
 
 	user = User.query.filter_by(email=email).first()
 	if user:
 		if user.password == password:
 			session['user'] = user.firstName
+			session['email'] = email
+			index()
 			return jsonify({'success': True})
 		else:
-			return jsonify({'success': False})
+			return jsonify({'success': False, "error" : "Bad Credentials"})
 	else:
-		return jsonify({'success': False})
+		return jsonify({'success': False, "error" : "Bad Credentials"})
 
 @app.route("/api/random")
 @cross_origin()
@@ -105,37 +112,48 @@ def random():
 		#base64_image = base64.b64encode(image_data).decode('utf-8')
 		return jsonify({'image': image_url, 'name': img_name})
 	except Exception as e:
-		return jsonify({'error': str(e)}), 500
+		return jsonify({'error': "Failed to retrieve random image."}), 500
 
 @app.route("/save", methods=["POST"])
 def save():
 	data = request.form.to_dict()
 
+	# image edit values
 	res = data.get("res")
 	bw = bool(data.get("bw"))
 	highs = data.get("highs")
 	image = request.files['image']
 	asci = request.files['art']
-	print("img", image, "art",asci)
 
 	img = image.filename
 	ascci = asci.filename
 
-	img_url = f'static/images/uploads/{img}'
-	ascci_url = f'static/images/uploads/{ascci}'
+	# save directory
+	user_id = User.query.filter_by(email=session['email']).first().id
+	save_path = f'static/images/uploads/{user_id}'
+	os.makedirs(f"app/{save_path}", exist_ok=True)
+
+
+	# image URLs - used to display in front-end
+	img_url = f'{save_path}/{img}'
+	ascci_url = f'{save_path}/{ascci}'
+
+	# image path - used in file management
 	img_path = f'app/{img_url}'
 	ascii_path = f'app/{ascci_url}'
+
+	# save images on server
 	image.save(img_path)
 	asci.save(ascii_path)
 
 	try:
-		art = AsciiImg(img=img_url, ascci=ascci_url, resolution=res, colour=bw, highlights=highs)
+		art = AsciiImg(user_id=user_id, img=img_url, ascci=ascci_url, resolution=res, colour=bw, highlights=highs)
 		db.session.add(art)
 		db.session.commit()
 		return jsonify({"success" : True})
 	except Exception as e:
 		print("Error saving img:", e)
-		return jsonify({"success" : False})
+		return jsonify({"success" : False, "error" : "Failed to save image."})
 
 @app.route("/delete", methods=["POST"])
 def delete():
@@ -149,7 +167,7 @@ def delete():
 		return jsonify({"success" : True})
 	except Exception as e:
 		print("Error deleting img:", e)
-		return jsonify({"success" : False})
+		return jsonify({"success" : False, "error" : "Failed to delete image."})
 
 @app.route("/logout", methods=["GET"])
 def logout():

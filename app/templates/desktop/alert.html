@@ -1,13 +1,22 @@
 {% block alert_window %}
 
-<div id="alert" class="window">                                                                  <div class="nav-bar">
-        <h5>ALERT</h5>                                                  <div class="nav-btns">                                              <button class="close">x</button>
-            <button>o</button>                                              <button>_</button>
-		</div>                                                      </div>
-		<div class="alert-text">
-			<h1>Screen too small</h1>
+<div id="alert" class="window content" style="display: none">
+	<div class="nav-bar">
+		<h5>ALERT</h5>
+		<div class="nav-btns">
+			<button class="close">x</button>
+			<button>o</button>
+			<button>_</button>
 		</div>
-    </div>
+	</div>
+	<div class="alert-content">
+		<div class="alert-icon">
+			<span class="warn warning"></span>
+		</div>
+		<div id="alert-text">
+			<h1>{{ alert_text }}</h1>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
